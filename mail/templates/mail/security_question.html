@@ -1,0 +1,33 @@
+{% extends "mail/layout.html" %}
+
+
+{% block body %}         
+
+	<!--Reset Password-->
+	<div class="container border p-5">
+  	 	<h2 class="font-weight-bold mt-3">Reset Password Security Question</h2>
+		<hr>
+		<p>In order to reset your password please Answer the following security Question.</p>
+        <form class="p-3 rounded border needs-validation" action="{% url 'question' %}" method="post" novalidate>
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="username">UserName:</label>
+                <input class="form-control" type="text" required name="username" minlength="5" maxlength="20" value="{{username}}">
+            </div>
+            <div class="form-group">
+                <label for="email">Security Question</label>
+                <input class="form-control" type="text" name="security_question"  required  value="{{security_question}}">
+            </div>
+            <div class="form-group">
+                <label for="email">Question Answer</label>
+                <input class="form-control" type="text" name="question_answer" minlength="3" maxlength="50" required placeholder="Scurity Question Answer">
+            </div>
+            <div class="form-group">
+                <br>
+            <button class="btn btn-primary" type="submit">submit</button>
+            </div>
+        </form>
+        If you remember password? <a class="btn btn-sm btn-info" href="{% url 'login' %}">Log In here.</a>
+  	</div> 
+
+{% endblock %}

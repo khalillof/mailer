@@ -1,0 +1,117 @@
+SHELL := /bin/bash
+
+# vars
+PROJECT := messenger
+LOCALPATH := ./
+PYTHONPATH := $(LOCALPATH)/
+DJANGO_SETTINGS_MODULE = $(PROJECT).settings
+DJANGO_POSTFIX := --settings=$(DJANGO_SETTINGS_MODULE) --pythonpath=$(PYTHONPATH)
+PYTHON_BIN := $(VIRTUAL_ENV)/bin
+
+.PHONY: clean showenv collectstatic run build build-remote install uninstall virtualenv browser download all
+
+showenv:
+	@echo '======================================================================================'
+	@echo 'FIRST TIME USAGE RUN (sudo make setup) or setup and run this commands (sudo make all)'
+	@echo 'After the first time setup run (sudo make run) or (sudo make browser) to run on your default browser'
+	@echo 'PROJECT Directory:' $(PROJECT)
+	@echo 'DJANGO_SETTINGS_MODULE:' $(DJANGO_SETTINGS_MODULE)
+	@echo '======================================================================================'
+
+
+djangohelp: 
+	python3 manage.py --help $(DJANGO_POSTFIX)
+
+collectstatic: 
+	-mkdir -p .$(LOCALPATH)/static
+	python3 manage.py collectstatic -c --noinput $(DJANGO_POSTFIX)
+
+run: 
+	python3 manage.py runserver $(DJANGO_POSTFIX)
+
+clean:
+	find . -name "*.pyc" -print0 | xargs -0 rm -rf
+	-rm -rf htmlcov
+	-rm -rf .coverage
+	-rm -rf build
+	-rm -rf dist
+	-rm -rf src/*.egg-info
+
+browser: run
+	python3 -c "import webbrowser; webbrowser.open('http://127.0.0.1:8000/')"
+
+install:  
+	pip install ./dependencies/zipp-3.6.0
+	pip install ./dependencies/importlib_resources-5.2.3
+	pip install ./dependencies/importlib_metadata-4.8.1	
+	pip install ./dependencies/backports.entry_points_selectable-1.1.0
+	pip install ./dependencies/distlib-0.3.3
+	pip install ./dependencies/py-filelock-3.3.1
+	pip install ./dependencies/platformdirs-2.4.0
+	pip install ./dependencies/six-1.9.0	
+	pip install ./dependencies/pathlib2-2.3.6
+	pip install ./dependencies/virtualenv-20.8.1
+	pip install ./dependencies/sqlparse-0.4.2
+	cd ./dependencies/pytz-release_2021.3 && make build && cd ../../ && pip install ./dependencies/pytz-release_2021.3/build/dist
+	pip install ./dependencies/dependencies/asgiref-3.4.1
+	pip install ./dependencies/django-3.2.8
+	pip install ./dependencies/django-cryptography-1.0
+
+uninstall:
+	pip uninstall virtualenv -y
+	pip uninstall zipp -y
+	pip uninstall backports.entry_points_selectable -y
+	pip uninstall distlib -y
+	pip uninstall filelock -y
+	pip uninstall platformdirs -y
+	pip uninstall six -y
+	pip uninstall importlib-metadata -y
+	pip uninstall importlib-resources -y
+	pip uninstall pathlib2 -y
+	pip uninstall sqlparse -y
+	pip uninstall pytz -y
+	pip uninstall asgiref -y
+	pip uninstall Django -y
+	pip uninstall django-cryptography -y
+
+virtualenv:
+	virtualenv . && source ./bin/activate
+
+download:
+	wget -c https://github.com/jaraco/zipp/archive/refs/tags/v3.6.0.tar.gz -P ./dependencies
+	wget -c https://github.com/jaraco/backports.entry_points_selectable/archive/refs/tags/v1.1.0.tar.gz -P ./dependencies
+	wget -c https://github.com/vsajip/distlib/archive/refs/tags/0.3.3.tar.gz -P ./dependencies
+	wget -c https://github.com/tox-dev/py-filelock/archive/refs/tags/3.3.1.tar.gz -P ./dependencies
+	wget -c https://github.com/platformdirs/platformdirs/archive/refs/tags/2.4.0.tar.gz -P ./dependencies
+	wget -c https://github.com/benjaminp/six/archive/refs/tags/1.9.0.tar.gz -P ./dependencies
+	wget -c https://github.com/python/importlib_metadata/archive/refs/tags/v4.8.1.tar.gz -P ./dependencies
+	wget -c https://github.com/python/importlib_resources/archive/refs/tags/v5.2.3.tar.gz -P ./dependencies
+	wget -c https://github.com/jazzband/pathlib2/archive/refs/tags/2.3.6.tar.gz -P ./dependencies
+	wget -c https://github.com/pypa/virtualenv/archive/refs/tags/20.8.1.tar.gz -P ./dependencies
+	wget -c https://github.com/andialbrecht/sqlparse/archive/refs/tags/0.4.2.tar.gz -P ./dependencies
+	wget -c https://github.com/stub42/pytz/archive/refs/tags/release_2021.3.tar.gz -P ./dependencies
+	wget -c https://github.com/django/asgiref/archive/refs/tags/3.4.1.tar.gz -P ./dependencies
+	wget -c https://github.com/django/django/archive/refs/tags/3.2.8.tar.gz -P ./dependencies
+	wget -c https://github.com/georgemarshall/django-cryptography/archive/refs/tags/1.0.tar.gz -P ./dependencies
+	
+tar:
+	tar -xzf ./dependencies/v3.6.0.tar.gz --directory=./dependencies
+	tar -xzf ./dependencies/v1.1.0.tar.gz --directory=./dependencies
+	tar -xzf ./dependencies/0.3.3.tar.gz --directory=./dependencies
+	tar -xzf ./dependencies/3.3.1.tar.gz --directory=./dependencies
+	tar -xzf ./dependencies/2.4.0.tar.gz --directory=./dependencies
+	tar -xzf ./dependencies/1.9.0.tar.gz --directory=./dependencies
+	tar -xzf ./dependencies/v4.8.1.tar.gz --directory=./dependencies
+	tar -xzf ./dependencies/v5.2.3.tar.gz --directory=./dependencies
+	tar -xzf ./dependencies/2.3.6.tar.gz --directory=./dependencies
+	tar -xzf ./dependencies/20.8.1.tar.gz --directory=./dependencies
+	tar -xzf ./dependencies/0.4.2.tar.gz  --directory=./dependencies
+	tar -xzf ./dependencies/release_2021.3.tar.gz --directory=./dependencies
+	tar -xzf ./dependencies/3.4.1.tar.gz --directory=./dependencies
+	tar -xzf ./dependencies/3.2.8.tar.gz --directory=./dependencies
+	tar -xzf ./dependencies/1.0.tar.gz --directory=./dependencies
+
+build: tar install virtualenv collectstatic browser 
+build-remote: download tar install virtualenv collectstatic browser
+
+all: local-buld browser

@@ -1,0 +1,18 @@
+body{
+    background-color: skyblue;
+}
+
+textarea {
+    min-height: 400px;
+
+}
+
+.msg{
+
+    border: solid rgb(117, 116, 116) !important;
+    border-radius: 20px !important
+}
+.msg:hover{
+   
+    border: solid #ddd !important
+}

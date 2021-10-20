@@ -1,0 +1,32 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>{% block title %}Mail{% endblock %}</title>
+        <link rel="icon" href="{% static 'mail/favicon.ico' %}">
+        <link rel="stylesheet" href="{% static 'mail/bootstrap/css/bootstrap.min.css' %}">
+        <link rel="stylesheet" href="{% static 'mail/styles.css' %}">
+       
+    </head>
+    <body >
+        <div class="container">         
+            <div class="rounded border bg-light p-3" style="max-width: 700px; margin: 0 auto;">
+                <div id="error_msg"  class="d-none alert alert-danger" role="alert""></div>
+                {% if message %}
+                <div id="message" class="alert alert-danger" role="alert"">{{ message }}</div>
+                 {% endif %}
+            {% block body %}
+            {% endblock %}
+        </div>
+        </div>
+        
+
+       
+        
+        {% block script %}  
+        <script src="{% static 'mail/inbox.js' %}"></script>
+        {% endblock %}
+    
+    </body>
+</html>

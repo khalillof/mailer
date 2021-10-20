@@ -1,0 +1,29 @@
+{% extends "mail/layout.html" %}
+
+{% block body %}
+
+    <h2>Login</h2>
+
+    <form class="p-3 rounded border needs-validation" action="{% url 'login' %}" method="post" novalidate>
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="username_email">Username or Email Address:</label>
+            <input autofocus class="form-control" type="" pattern="[a-zA-Z][a-zA-Z0-9-_.@]{1,20}" name="username_email" required minlength="5" maxlength="20" placeholder="Username or Email">
+        </div>
+
+        <div class="form-group">
+            <label for="email">Password:</label>
+            <input class="form-control" type="password" name="password" required minlength="6" maxlength="10" placeholder="Password">
+        </div>
+        <div class="form-group">
+            <br>
+        <input class="btn btn-primary" type="submit" value="Login">
+        <br>
+    </div>
+    </form>
+<br>
+    Don't have an account? <a href="{% url 'register' %}" class="btn btn-sm btn-info">register here</a>  
+    
+    forgot your password? <a class="btn btn-sm btn-info" href="{% url 'password_reset' %}"> reset password. </a>
+
+{% endblock %}
