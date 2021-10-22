@@ -1,22 +1,30 @@
-pipeline {
-    agent any
+//Jenkinsfile (Declarative Pipeline)
+pipeline { 
+    agent any 
+    options {
+        skipStagesAfterUnstable()
+    }
+    stages {
+        stage('Build') { 
+            steps { 
+                sh 'make' 
+            }
+        }
+        stage('build'){
+            steps {
+                sh 'make build'
+            }
+        }
+        stage('run') {
+            steps {
+                sh 'make run'
+            }          
+        }
+        if (currentBuild.currentResult == 'SUCCESS') {
+        stage('Deploy') {
+            sh 'make'
+        }
+    }
 
-    stages{
-        stage("build"){
-            steps{
-                echo 'Building the application .....!'
-
-            }
-        }
-        stage("test"){
-            steps{
-                echo 'Testing the application .....!'
-            }
-        }
-        stage("deploy"){
-            steps{
-                echo 'deploying the application .....!'
-            }
-        }
     }
 }
