@@ -20,10 +20,7 @@ pipeline {
                 sh 'make run'
             }          
         }
-        if (currentBuild.currentResult == 'SUCCESS') {
-        stage('Deploy') {
-            sh 'make'
-        }
+        
     }
 
     }
